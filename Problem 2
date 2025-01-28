@@ -1,0 +1,42 @@
+import sqlite3
+
+# Connect to SQLite database (creates a new file if it doesn't exist)
+conn = sqlite3.connect("adventure_trip.db")
+cursor = conn.cursor()
+
+# a) Create the ADVENTURE_TRIP table
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS ADVENTURE_TRIP (
+        TRIP_ID INTEGER PRIMARY KEY,
+        TRIP_NAME TEXT NOT NULL,
+        START_LOCATION TEXT,
+        STATE TEXT,
+        DISTANCE REAL,
+        MAX_GRP_SIZE INTEGER,
+        TYPE TEXT,
+        SEASON TEXT
+    );
+""")
+
+# b) Insert the specified row into ADVENTURE_TRIP
+cursor.execute("""
+    INSERT INTO ADVENTURE_TRIP (TRIP_ID, TRIP_NAME, START_LOCATION, STATE, DISTANCE, MAX_GRP_SIZE, TYPE, SEASON)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+""", (45, 'Jay Peak', 'Jay', 'VT', 8, 8, 'Hiking', 'Summer'))
+
+# Commit the changes
+conn.commit()
+
+# Display the contents of the ADVENTURE_TRIP table
+cursor.execute("SELECT * FROM ADVENTURE_TRIP")
+rows = cursor.fetchall()
+print("Contents of ADVENTURE_TRIP table:")
+for row in rows:
+    print(row)
+
+# c) Delete the ADVENTURE_TRIP table (Uncomment if needed)
+# cursor.execute("DROP TABLE ADVENTURE_TRIP")
+# conn.commit()
+
+# Close the connection
+conn.close()
