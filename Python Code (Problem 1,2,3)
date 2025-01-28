@@ -54,7 +54,6 @@ print("ENROLLMENT Table Data:", cursor.fetchall())
 
 conn.close()
 
-
 # ------------------------- PROBLEM 2: Solmaris Condominium Group -------------------------
 conn = sqlite3.connect("solmaris_condo.db")
 cursor = conn.cursor()
