@@ -1,0 +1,150 @@
+import sqlite3
+
+# ------------------------- PROBLEM 1: Colonial Adventure Tours -------------------------
+conn = sqlite3.connect("colonial_adventure.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS PARTICIPANT (
+        PARTICIPANT_ID INTEGER PRIMARY KEY,
+        LAST_NAME TEXT NOT NULL,
+        FIRST_NAME TEXT NOT NULL,
+        ADDRESS TEXT,
+        CITY TEXT,
+        STATE TEXT,
+        POSTAL_CODE TEXT,
+        TELEPHONE TEXT,
+        DATE_OF_BIRTH DATE
+    );
+""")
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS ADVENTURE_CLASS (
+        CLASS_ID INTEGER PRIMARY KEY,
+        CLASS_DESC TEXT NOT NULL,
+        MAX_PEOPLE INTEGER,
+        CLASS_FEE REAL
+    );
+""")
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS ENROLLMENT (
+        PARTICIPANT_ID INTEGER,
+        CLASS_ID INTEGER,
+        CLASS_DATE DATE,
+        FOREIGN KEY (PARTICIPANT_ID) REFERENCES PARTICIPANT(PARTICIPANT_ID),
+        FOREIGN KEY (CLASS_ID) REFERENCES ADVENTURE_CLASS(CLASS_ID),
+        PRIMARY KEY (PARTICIPANT_ID, CLASS_ID, CLASS_DATE)
+    );
+""")
+
+cursor.execute("INSERT INTO PARTICIPANT VALUES (1, 'Smith', 'John', '123 Maple St', 'Boston', 'MA', '02108', '555-1234', '1990-05-15')")
+cursor.execute("INSERT INTO ADVENTURE_CLASS VALUES (101, 'Hiking Basics', 10, 50.00)")
+cursor.execute("INSERT INTO ENROLLMENT VALUES (1, 101, '2025-02-15')")
+
+conn.commit()
+cursor.execute("SELECT * FROM PARTICIPANT")
+print("PARTICIPANT Table Data:", cursor.fetchall())
+
+cursor.execute("SELECT * FROM ADVENTURE_CLASS")
+print("ADVENTURE_CLASS Table Data:", cursor.fetchall())
+
+cursor.execute("SELECT * FROM ENROLLMENT")
+print("ENROLLMENT Table Data:", cursor.fetchall())
+
+conn.close()
+
+
+# ------------------------- PROBLEM 2: Solmaris Condominium Group -------------------------
+conn = sqlite3.connect("solmaris_condo.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS RENTER (
+        RENTER_ID INTEGER PRIMARY KEY,
+        FIRST_NAME TEXT NOT NULL,
+        MIDDLE_INITIAL TEXT,
+        LAST_NAME TEXT NOT NULL,
+        ADDRESS TEXT,
+        CITY TEXT,
+        STATE TEXT,
+        POSTAL_CODE TEXT,
+        TELEPHONE TEXT,
+        EMAIL TEXT
+    );
+""")
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS PROPERTY (
+        CONDO_ID INTEGER PRIMARY KEY,
+        LOCATION_NAME TEXT NOT NULL,
+        ADDRESS TEXT,
+        CITY TEXT,
+        STATE TEXT,
+        POSTAL_CODE TEXT,
+        UNIT_NUMBER TEXT,
+        SQUARE_FEET INTEGER,
+        BEDROOMS INTEGER,
+        BATHROOMS INTEGER,
+        MAX_OCCUPANCY INTEGER,
+        WEEKLY_RATE REAL
+    );
+""")
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS RENTAL_AGREEMENT (
+        RENTER_ID INTEGER,
+        CONDO_ID INTEGER,
+        START_DATE DATE,
+        END_DATE DATE,
+        WEEKLY_RENT REAL,
+        FOREIGN KEY (RENTER_ID) REFERENCES RENTER(RENTER_ID),
+        FOREIGN KEY (CONDO_ID) REFERENCES PROPERTY(CONDO_ID),
+        PRIMARY KEY (RENTER_ID, CONDO_ID, START_DATE)
+    );
+""")
+
+cursor.execute("INSERT INTO RENTER VALUES (1, 'Jane', 'M', 'Doe', '456 Pine St', 'Los Angeles', 'CA', '90001', '555-5678', 'jane.doe@email.com')")
+cursor.execute("INSERT INTO PROPERTY VALUES (201, 'Ocean View', '789 Beach Rd', 'Miami', 'FL', '33101', 'A1', 1200, 2, 2, 4, 1500.00)")
+cursor.execute("INSERT INTO RENTAL_AGREEMENT VALUES (1, 201, '2025-03-01', '2025-03-15', 1500.00)")
+
+conn.commit()
+cursor.execute("SELECT * FROM RENTER")
+print("RENTER Table Data:", cursor.fetchall())
+
+cursor.execute("SELECT * FROM PROPERTY")
+print("PROPERTY Table Data:", cursor.fetchall())
+
+cursor.execute("SELECT * FROM RENTAL_AGREEMENT")
+print("RENTAL_AGREEMENT Table Data:", cursor.fetchall())
+
+conn.close()
+
+
+# ------------------------- PROBLEM 3: Adventure Trip Database -------------------------
+conn = sqlite3.connect("adventure_trip.db")
+cursor = conn.cursor()
+
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS ADVENTURE_TRIP (
+        TRIP_ID INTEGER PRIMARY KEY,
+        TRIP_NAME TEXT NOT NULL,
+        START_LOCATION TEXT,
+        STATE TEXT,
+        DISTANCE REAL,
+        MAX_GRP_SIZE INTEGER,
+        TYPE TEXT,
+        SEASON TEXT
+    );
+""")
+
+cursor.execute("""
+    INSERT INTO ADVENTURE_TRIP (TRIP_ID, TRIP_NAME, START_LOCATION, STATE, DISTANCE, MAX_GRP_SIZE, TYPE, SEASON)
+    VALUES (45, 'Jay Peak', 'Jay', 'VT', 8, 8, 'Hiking', 'Summer');
+""")
+
+conn.commit()
+cursor.execute("SELECT * FROM ADVENTURE_TRIP")
+print("ADVENTURE_TRIP Table Data:", cursor.fetchall())
+
+conn.close()
